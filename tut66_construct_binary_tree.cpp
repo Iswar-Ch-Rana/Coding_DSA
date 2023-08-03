@@ -34,3 +34,37 @@ public:
     }
 };
 
+
+/********************* 106. Construct Binary Tree from Inorder and Postorder Traversal ***********************/
+
+
+class Solution {
+public:
+    int search(vector<int>v,int x)
+    {
+        for(int i=0;i<v.size();i++)
+        {
+            if(v[i]==x)
+            return i;
+        }
+        return -1;
+    }
+    TreeNode* solve(vector<int>& inorder,vector<int>& postorder,int& postindex,int inorderstart,int inorderend)
+    {
+        if(postindex<0||(inorderstart>inorderend))
+        return NULL;
+
+        TreeNode* root=new TreeNode(postorder[postindex--]);
+        int pos=search(inorder,root->val);
+        root->right=solve(inorder,postorder,postindex,pos+1,inorderend);
+        root->left=solve(inorder,postorder,postindex,inorderstart,pos-1);
+        return root;
+    }
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        int postindex=postorder.size()-1;
+        int inorderstart=0;
+        int inorderend=postorder.size()-1;
+        return solve(inorder,postorder,postindex,inorderstart,inorderend);
+    }
+};
+

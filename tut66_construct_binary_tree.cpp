@@ -37,34 +37,34 @@ public:
 
 /********************* 106. Construct Binary Tree from Inorder and Postorder Traversal ***********************/
 
-
 class Solution {
 public:
-    int search(vector<int>v,int x)
-    {
-        for(int i=0;i<v.size();i++)
-        {
-            if(v[i]==x)
-            return i;
-        }
-        return -1;
+    int findpos(vector<int> &inorder, int ele,int n){
+         for(int i=0;i<n;i++){
+             if(inorder[i]==ele){
+                 return i;
+             }
+         }
+         return -1;
     }
-    TreeNode* solve(vector<int>& inorder,vector<int>& postorder,int& postindex,int inorderstart,int inorderend)
-    {
-        if(postindex<0||(inorderstart>inorderend))
-        return NULL;
+    TreeNode* solve(vector<int> &inorder, vector<int> &postorder,int &index,int start,int end,int n){
+        if(index< 0 || start>end) return nullptr;
+        int ele = postorder[index--];
+        int pos = findpos(inorder,ele,n);
 
-        TreeNode* root=new TreeNode(postorder[postindex--]);
-        int pos=search(inorder,root->val);
-        root->right=solve(inorder,postorder,postindex,pos+1,inorderend);
-        root->left=solve(inorder,postorder,postindex,inorderstart,pos-1);
-        return root;
+        TreeNode* temp = new TreeNode(ele);
+          temp->right = solve(inorder,postorder,index,pos+1,end,n);
+
+        temp->left = solve(inorder,postorder,index,start,pos-1,n);
+      
+        return temp;
+
     }
     TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
-        int postindex=postorder.size()-1;
-        int inorderstart=0;
-        int inorderend=postorder.size()-1;
-        return solve(inorder,postorder,postindex,inorderstart,inorderend);
+        
+        int n = postorder.size();
+        int index=n-1;
+        TreeNode* ans = solve(inorder,postorder,index,0,n-1,n);
+        return ans;
     }
 };
-
